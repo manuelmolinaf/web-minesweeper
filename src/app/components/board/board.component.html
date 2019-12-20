@@ -1,0 +1,43 @@
+
+<div class="container">
+
+	<div id="board" class="row no-gutters justify-content-center vertical-center">
+
+		<div class="col col-sm-auto no-gutters" *ngFor="let column of board; index as x;">
+			
+			<div class="tile border border-dark rounded" *ngFor="let tile of column; index as y;">
+	
+				<div *ngIf="board[x][y].hasBomb()">
+					<i class="fas fa-bomb" style="font-size: 40px;"></i>
+				</div>
+	
+				<div *ngIf="!board[x][y].hasBomb() && board[x][y].adjacentBombs > 0">
+
+					<div [ngClass]="
+						{
+
+							'text-blue': board[x][y].adjacentBombs === 1, 
+							'text-green': board[x][y].adjacentBombs === 2,
+							'text-red': board[x][y].adjacentBombs === 3,
+							'text-indigo': board[x][y].adjacentBombs === 4,
+							'text-purple': board[x][y].adjacentBombs === 5,
+							'text-orange': board[x][y].adjacentBombs === 6,
+							'text-black': board[x][y].adjacentBombs === 7,
+							'text-magenta': board[x][y].adjacentBombs === 8
+
+						}
+						" >
+
+						{{board[x][y].adjacentBombs}}
+
+					</div>
+
+				</div>
+	
+			</div>
+	
+		</div>
+	
+	</div>
+
+</div>
