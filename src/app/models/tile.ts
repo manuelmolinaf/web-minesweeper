@@ -1,13 +1,15 @@
 export class Tile {
 
     public bomb: boolean;
-    public adjacentBombs: number;
     public hidden: boolean;
+    public flagged: boolean;
+    public adjacentBombs: number;
 
     constructor(){
         this.bomb = false;
         this.adjacentBombs = 0;
         this.hidden = true;
+        this.flagged = false;
     }
 
     public plantBomb(): void {
@@ -31,5 +33,12 @@ export class Tile {
         this.hidden = false; 
     }
 
+    public isFlagged(){       
+        return this.flagged;
+    }
+
+    public toggleFlag(){
+        this.flagged = !this.flagged; 
+    }
 
 }

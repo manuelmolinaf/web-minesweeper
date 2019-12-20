@@ -8,9 +8,9 @@ import { Tile } from '../../models/tile'
 export class BoardComponent implements OnInit {
 
   //TODO: Fix only working with same x and y values
-  public xTiles: number = 5;
+  public xTiles: number = 10;
   public yTiles: number = 10;
-  public nBombs: number = 15;
+  public nBombs: number = 35;
   public board:Array<Array<Tile>> = new Array<Array<Tile>>();
   
 
@@ -111,6 +111,22 @@ export class BoardComponent implements OnInit {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+  }
+
+  public action(e, x: number, y: number):void {
+   
+    if(e.type === 'click' ) {
+
+      if(this.board[x][y].isHidden() && e.shiftKey === true){
+        this.board[x][y].toggleFlag();
+      }
+
+      if(this.board[x][y].isHidden() && !this.board[x][y].isFlagged() && e.shiftKey === false){
+        this.board[x][y].reveal();
+      }
+    }
+    
+    
   }
 
 }
