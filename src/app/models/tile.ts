@@ -25,20 +25,25 @@ export class Tile {
         return (!this.bomb && this.adjacentBombs === 0)
     }
 
-    public isHidden(){
+    public isHidden():boolean{
         return this.hidden;
     }
 
-    public reveal(){
+    public reveal():void{
         this.hidden = false; 
     }
 
-    public isFlagged(){       
+    public isFlagged():boolean{       
         return this.flagged;
     }
 
-    public toggleFlag(){
+    public toggleFlag():void{
         this.flagged = !this.flagged; 
+    }
+
+    public hasNumber():boolean{
+       if(this.adjacentBombs > 0) return true;
+       else return false; 
     }
 
 }

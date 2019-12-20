@@ -1,132 +1,144 @@
 import { Component, OnInit } from '@angular/core';
 import { Tile } from '../../models/tile'
 @Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss']
+	selector: 'app-board',
+	templateUrl: './board.component.html',
+	styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-
-  //TODO: Fix only working with same x and y values
-  public xTiles: number = 10;
-  public yTiles: number = 10;
-  public nBombs: number = 35;
-  public board:Array<Array<Tile>> = new Array<Array<Tile>>();
+  
+	public xTiles: number = 21;
+	public yTiles: number = 12;
+	public nBombs: number = 30;
+	public board:Array<Array<Tile>> = new Array<Array<Tile>>();
   
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit() {
-    this.setNewBoard();
-  }
+	ngOnInit() {
+		this.setNewBoard();
+	}
 
-  //initialize board
-  public setNewBoard(): void {
+	public setNewBoard(): void {
 
-    for(let x = 0; x < this.xTiles; x++) {
+		for(let x = 0; x < this.xTiles; x++) {
 
-      this.board.push(new Array<Tile>());
+			this.board.push(new Array<Tile>());
 
-      for(let y = 0; y < this.yTiles; y++) {
+			for(let y = 0; y < this.yTiles; y++) {
 
-        this.board[x].push(new Tile());
+				this.board[x].push(new Tile());
 
-      }
+			}
 
-    }
+		}
 
-    //plant bombs
-    for(let i = 0; i< this.nBombs; i++){
+		this.plantBombs();
+		
+		this.numberTiles();
 
-      var x = this.getRandomInt(0,this.xTiles);
-      var y = this.getRandomInt(0,this.yTiles);
+	}
 
-      this.board[x][y].plantBomb();
-    }   
+	public plantBombs(): void {
 
-    //number tiles
-    for(let y = 0; y < this.yTiles; y++) {
+		for(let i = 0; i< this.nBombs; i++){
 
-      for(let x = 0; x < this.xTiles; x++) {
+			var x = this.getRandomInt(0,this.xTiles);
+			var y = this.getRandomInt(0,this.yTiles);
 
-        if(!this.board[x][y].hasBomb()){
-          this.board[x][y].adjacentBombs = this.getAdjacentBombs(x,y);
-        }
-        
-      }
-    }
+			while(this.board[x][y].hasBomb()) {
 
-  }
+				x = this.getRandomInt(0,this.xTiles);
+				y = this.getRandomInt(0,this.yTiles);
+			}
 
-  public getAdjacentBombs(x: number, y: number): number {
+			this.board[x][y].plantBomb();
+		}
 
-    var bombs = 0;
-    
-    
-    if(!this.isOutOfIndex(x-1,y-1) && this.board[x-1][y-1].hasBomb()) {
-      bombs++;
-    }
+	}
 
-    if(!this.isOutOfIndex(x,y-1) && this.board[x][y-1].hasBomb()) {
-      bombs++;
-    }
+	public  numberTiles(): void {
 
-    if(!this.isOutOfIndex(x+1,y-1) && this.board[x+1][y-1].hasBomb()) {
-      bombs++;
-    }
+		for(let y = 0; y < this.yTiles; y++) {
 
-    if(!this.isOutOfIndex(x-1,y) && this.board[x-1][y].hasBomb()) {
-      bombs++;
-    }
+			for(let x = 0; x < this.xTiles; x++) {
 
-    if(!this.isOutOfIndex(x,y) && this.board[x][y].hasBomb()) {
-      bombs++;
-    }
+				if(!this.board[x][y].hasBomb()){
+					this.board[x][y].adjacentBombs = this.getAdjacentBombs(x,y);
+				}
+				
+			}
+		}
 
-    if(!this.isOutOfIndex(x+1,y) && this.board[x+1][y].hasBomb()) {
-      bombs++;
-    }
+	}
 
-    if(!this.isOutOfIndex(x-1,y+1) && this.board[x-1][y+1].hasBomb()) {
-      bombs++;
-    }
+	public getAdjacentBombs(x: number, y: number): number {
 
-    if(!this.isOutOfIndex(x,y+1) && this.board[x][y+1].hasBomb()) {
-      bombs++;
-    }
+		var bombs = 0;
+		
+		for(let i = x-1; i <= x + 1; i++) {
+			for(let j = y-1; j <= y+ 1; j++) {
+				if(!this.isOutOfIndex(i,j) && this.board[i][j].hasBomb()) {
+					bombs++;
+				}
+			}	
+		}
 
-    if(!this.isOutOfIndex(x+1,y+1) && this.board[x+1][y+1].hasBomb()) {
-      bombs++;
-    }
+		return bombs;
+	}
 
-    
-    return bombs;
-  }
+	public isOutOfIndex(x: number, y: number): boolean {
+		return(x < 0 || x > this.xTiles - 1|| y < 0 || y > this.yTiles - 1)
+	}
 
-  public isOutOfIndex(x: number, y: number): boolean {
-    return(x < 0 || x > this.xTiles - 1|| y < 0 || y > this.yTiles - 1)
-  }
+	public getRandomInt(min: number, max: number): number {
 
-  public getRandomInt(min: number, max: number): number {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-  }
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+	}
 
-  public action(e, x: number, y: number):void {
-   
-    if(e.type === 'click' ) {
+	public action(e, x: number, y: number):void {
+	
+		if(e.type === 'click' ) {
 
-      if(this.board[x][y].isHidden() && e.shiftKey === true){
-        this.board[x][y].toggleFlag();
-      }
+			if(this.board[x][y].isHidden() && e.shiftKey === true){
+				this.board[x][y].toggleFlag();
+			}
 
-      if(this.board[x][y].isHidden() && !this.board[x][y].isFlagged() && e.shiftKey === false){
-        this.board[x][y].reveal();
-      }
-    }
-    
-    
-  }
+			if(this.board[x][y].isHidden() && !this.board[x][y].isFlagged() && e.shiftKey === false){
+				//this.board[x][y].reveal();
+				this.revealTiles(x,y);
+			}
+		}
+		
+	}
+
+	public revealTiles(x:number, y:number): void{
+
+		
+
+		this.board[x][y].reveal();	
+
+		if(!this.board[x][y].hasNumber()) {
+
+			for(let i = x-1; i <= x + 1; i++) {
+				for(let j = y-1; j <= y+ 1; j++) {
+					if(!this.isOutOfIndex(i,j)) {
+	
+						if(this.board[i][j].isEmpty() && this.board[i][j].isHidden()) {
+							this.revealTiles(i,j)
+						}
+						else if(this.board[i][j].hasNumber()) {
+							this.board[i][j].reveal();
+						}
+						
+					}
+				}	
+			}
+
+		}
+
+	}
 
 }
