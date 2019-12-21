@@ -9,7 +9,7 @@ export class BoardComponent implements OnInit {
   
 	public xTiles: number = 21;
 	public yTiles: number = 12;
-	public nBombs: number = 30;
+	public nBombs: number = 50;
 	public board:Array<Array<Tile>> = new Array<Array<Tile>>();
   
 
@@ -95,7 +95,7 @@ export class BoardComponent implements OnInit {
 
 		min = Math.ceil(min);
 		max = Math.floor(max);
-		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+		return Math.floor(Math.random() * (max - min)) + min;
 	}
 
 	public action(e, x: number, y: number):void {
@@ -114,9 +114,7 @@ export class BoardComponent implements OnInit {
 		
 	}
 
-	public revealTiles(x:number, y:number): void{
-
-		
+	public revealTiles(x:number, y:number): void {
 
 		this.board[x][y].reveal();	
 

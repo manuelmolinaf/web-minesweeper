@@ -1,0 +1,35 @@
+<div *ngIf="tile.isHidden() && tile.isFlagged()">
+    <i class="fab fa-font-awesome-flag board-icon"></i>
+    
+</div>
+
+<div *ngIf="!tile.isHidden()">
+
+    <div *ngIf="tile.hasBomb()">
+        <i class="fas fa-bomb board-icon"></i>
+    </div>
+
+    <div *ngIf="!tile.hasBomb() && tile.adjacentBombs > 0">
+
+        <div [ngClass]="
+            {
+
+                'text-blue': tile.adjacentBombs === 1, 
+                'text-green': tile.adjacentBombs === 2,
+                'text-red': tile.adjacentBombs === 3,
+                'text-indigo': tile.adjacentBombs === 4,
+                'text-purple': tile.adjacentBombs === 5,
+                'text-orange': tile.adjacentBombs === 6,
+                'text-black': tile.adjacentBombs === 7,
+                'text-magenta': tile.adjacentBombs === 8
+
+            }
+            " >
+
+            {{tile.adjacentBombs}}
+
+        </div>
+
+    </div>
+
+</div>

@@ -7,47 +7,11 @@
 			
 			<div  *ngFor="let tile of column; index as y;">
 	
-				<button class="tile btn border border-dark" [ngClass]="{'btn-secondary': board[x][y].isHidden(), 'btn-light': !board[x][y].isHidden()}" (click)="action($event, x, y)">
+				<button class="tile btn border border-dark" (click)="action($event, x, y)" [ngClass]="{'btn-secondary': board[x][y].isHidden(), 'btn-light': !board[x][y].isHidden()}">
 
-					<div *ngIf="board[x][y].isHidden() && board[x][y].isFlagged()">
-						<i class="fab fa-font-awesome-flag board-icon"></i>
-						
-					</div>
-
-					<div *ngIf="!board[x][y].isHidden()">
-
-						<div *ngIf="board[x][y].hasBomb()">
-							<i class="fas fa-bomb board-icon"></i>
-						</div>
-			
-						<div *ngIf="!board[x][y].hasBomb() && board[x][y].adjacentBombs > 0">
-		
-							<div [ngClass]="
-								{
-		
-									'text-blue': board[x][y].adjacentBombs === 1, 
-									'text-green': board[x][y].adjacentBombs === 2,
-									'text-red': board[x][y].adjacentBombs === 3,
-									'text-indigo': board[x][y].adjacentBombs === 4,
-									'text-purple': board[x][y].adjacentBombs === 5,
-									'text-orange': board[x][y].adjacentBombs === 6,
-									'text-black': board[x][y].adjacentBombs === 7,
-									'text-magenta': board[x][y].adjacentBombs === 8
-		
-								}
-								" >
-		
-								{{board[x][y].adjacentBombs}}
-		
-							</div>
-
-						</div>
-
-					</div>
-					
-				</button>
-
+					<app-tile [tile]="tile"></app-tile>
 				
+				</button>			
 	
 			</div>
 	
