@@ -4,12 +4,14 @@ export class Tile {
     public hidden: boolean;
     public flagged: boolean;
     public adjacentBombs: number;
+    public exploded: boolean;
 
     constructor(){
         this.bomb = false;
         this.adjacentBombs = 0;
         this.hidden = true;
         this.flagged = false;
+        this.exploded = false;
     }
 
     public plantBomb(): void {
@@ -20,30 +22,38 @@ export class Tile {
         return this.bomb;
     }
 
-    public isEmpty(): boolean{
+    public isEmpty(): boolean {
         
         return (!this.bomb && this.adjacentBombs === 0)
     }
 
-    public isHidden():boolean{
+    public isHidden():boolean {
         return this.hidden;
     }
 
-    public reveal():void{
+    public reveal():void {
         this.hidden = false; 
     }
 
-    public isFlagged():boolean{       
+    public isFlagged():boolean {       
         return this.flagged;
     }
 
-    public toggleFlag():void{
+    public toggleFlag():void {
         this.flagged = !this.flagged; 
     }
 
-    public hasNumber():boolean{
+    public hasNumber():boolean {
        if(this.adjacentBombs > 0) return true;
        else return false; 
+    }
+
+    public explode(): void {
+        this.exploded = true;
+    }
+
+    public hasExlpoded(): boolean {
+        return this.exploded;
     }
 
 }

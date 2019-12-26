@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Tile } from '../../models/tile'
+import { Tile } from '../../models/tile';
+import { GameState } from '../..//models/game-state'
 @Component({
 	selector: 'app-board',
 	templateUrl: './board.component.html',
@@ -7,16 +8,21 @@ import { Tile } from '../../models/tile'
 })
 export class BoardComponent implements OnInit {
   
+	public boardWidth: number = 100;
+	public boardHeight: number = 100;
+
+
 	public xTiles: number = 21;
 	public yTiles: number = 12;
-	public nBombs: number = 50;
+	public nBombs: number = 10;
 	public board:Array<Array<Tile>> = new Array<Array<Tile>>();
-  
+	public gameState: GameState = GameState.InProgress;
 
 	constructor() { }
 
 	ngOnInit() {
-		this.setNewBoard();
+
+		this.setNewBoard();	
 	}
 
 	public setNewBoard(): void {
@@ -64,7 +70,8 @@ export class BoardComponent implements OnInit {
 			for(let x = 0; x < this.xTiles; x++) {
 
 				if(!this.board[x][y].hasBomb()){
-					this.board[x][y].adjacentBombs = this.getAdjacentBombs(x,y);
+
+					this.board[x][y].adjacentBombs = this.getAdjacentBombs(x,y);			
 				}
 				
 			}
@@ -88,6 +95,7 @@ export class BoardComponent implements OnInit {
 	}
 
 	public isOutOfIndex(x: number, y: number): boolean {
+
 		return(x < 0 || x > this.xTiles - 1|| y < 0 || y > this.yTiles - 1)
 	}
 
@@ -95,48 +103,104 @@ export class BoardComponent implements OnInit {
 
 		min = Math.ceil(min);
 		max = Math.floor(max);
+
 		return Math.floor(Math.random() * (max - min)) + min;
 	}
 
-	public action(e, x: number, y: number):void {
+	public action(event:any, x: number, y: number):void {
 	
-		if(e.type === 'click' ) {
+		if(event.type === 'click' ) {
 
-			if(this.board[x][y].isHidden() && e.shiftKey === true){
+			if(this.board[x][y].isHidden() && event.shiftKey === true){
 				this.board[x][y].toggleFlag();
 			}
 
-			if(this.board[x][y].isHidden() && !this.board[x][y].isFlagged() && e.shiftKey === false){
-				//this.board[x][y].reveal();
+			if(this.board[x][y].isHidden() && !this.board[x][y].isFlagged() && event.shiftKey === false){
+				
 				this.revealTiles(x,y);
 			}
-		}
-		
+
+			if(this.gameState !== GameState.GameOver && this.gameIsCleared()) {
+				this.gameState = GameState.Cleared
+				console.log('cleared!');
+			}
+		}		
 	}
 
 	public revealTiles(x:number, y:number): void {
 
-		this.board[x][y].reveal();	
+		this.board[x][y].reveal();
+		
+		if(!this.board[x][y].hasBomb() && !this.board[x][y].isFlagged())
+		{
+			if(!this.board[x][y].hasNumber()) {
 
-		if(!this.board[x][y].hasNumber()) {
+				for(let i = x-1; i <= x + 1; i++) {
 
-			for(let i = x-1; i <= x + 1; i++) {
-				for(let j = y-1; j <= y+ 1; j++) {
-					if(!this.isOutOfIndex(i,j)) {
-	
-						if(this.board[i][j].isEmpty() && this.board[i][j].isHidden()) {
-							this.revealTiles(i,j)
-						}
-						else if(this.board[i][j].hasNumber()) {
-							this.board[i][j].reveal();
-						}
+					for(let j = y-1; j <= y+ 1; j++) {
 						
-					}
-				}	
+						if(!this.isOutOfIndex(i,j)) {
+		
+							if(this.board[i][j].isEmpty() && this.board[i][j].isHidden()) {
+
+								this.revealTiles(i,j)
+							}
+							else if(this.board[i][j].hasNumber()) {
+
+								this.board[i][j].reveal();
+							}
+							
+						}
+					}	
+				}
 			}
+		}
+		else {
+
+			this.board[x][y].explode();
+			this.gameOver();
 
 		}
+		
 
 	}
 
+	public gameOver(): void {
+
+		this.gameState = GameState.GameOver;
+		this.revealBombs();
+
+	}
+
+	public revealBombs(): void {
+
+		for(let y = 0; y < this.yTiles; y++) {
+
+			for(let x = 0; x < this.xTiles; x++) {
+
+				if(this.board[x][y].hasBomb() && !this.board[x][y].isFlagged()){
+					this.board[x][y].reveal();
+				}
+				
+			}
+		}
+	}
+
+	public gameIsCleared(): boolean {
+
+		var cleared = true;
+
+		for(let y = 0; y < this.yTiles; y++) {
+
+			for(let x = 0; x < this.xTiles; x++) {
+
+				if(this.board[x][y].hasBomb() && !this.board[x][y].isFlagged() || !this.board[x][y].hasBomb() && this.board[x][y].isHidden() ){
+					cleared = false;
+				}
+				
+			}
+		}
+		return cleared;
+	}
 }
+

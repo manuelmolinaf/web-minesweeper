@@ -1,30 +1,32 @@
-<div *ngIf="tile.isHidden() && tile.isFlagged()">
-    <i class="fab fa-font-awesome-flag board-icon"></i>
-    
+
+<div *ngIf="tile.isFlagged() && (gameState === 0 || gameState === 2 ) || tile.hasBomb() && tile.isFlagged() && gameState === 1">
+    <i class="fab fa-font-awesome-flag tile-icon"></i>   
+</div>
+
+<div *ngIf="tile.isFlagged() && gameState === 1 && !tile.hasBomb()">      
+        <i class="fas fa-ban tile-icon" style="color: red;"></i>
 </div>
 
 <div *ngIf="!tile.isHidden()">
 
     <div *ngIf="tile.hasBomb()">
-        <i class="fas fa-bomb board-icon"></i>
+        <i class="fas fa-bomb tile-icon"></i>
     </div>
 
     <div *ngIf="!tile.hasBomb() && tile.adjacentBombs > 0">
 
-        <div [ngClass]="
-            {
+        <div [ngClass]=" {
 
                 'text-blue': tile.adjacentBombs === 1, 
                 'text-green': tile.adjacentBombs === 2,
                 'text-red': tile.adjacentBombs === 3,
-                'text-indigo': tile.adjacentBombs === 4,
+                'text-maroon': tile.adjacentBombs === 4,
                 'text-purple': tile.adjacentBombs === 5,
                 'text-orange': tile.adjacentBombs === 6,
                 'text-black': tile.adjacentBombs === 7,
                 'text-magenta': tile.adjacentBombs === 8
 
-            }
-            " >
+            }">
 
             {{tile.adjacentBombs}}
 

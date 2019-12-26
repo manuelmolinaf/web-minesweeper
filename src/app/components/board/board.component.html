@@ -3,15 +3,22 @@
 
 	<div class="row no-gutters justify-content-center vertical-center">
 
-		<div class="col col-sm-auto no-gutters" *ngFor="let column of board; index as x;">
+		<div class="col-auto no-gutters" *ngFor="let column of board; index as x;">
 			
 			<div  *ngFor="let tile of column; index as y;">
-	
-				<button class="tile btn border border-dark" (click)="action($event, x, y)" [ngClass]="{'btn-secondary': board[x][y].isHidden(), 'btn-light': !board[x][y].isHidden()}">
+					
+				<!-- 1 => gameover -->
+				<button [disabled]="gameState === 1" class="tile btn border border-dark" (click)="action($event, x, y)" 
+				[ngClass]="{
+					'btn-secondary': board[x][y].isHidden(),
+					'btn-gray-light': !board[x][y].isHidden() && !board[x][y].hasBomb(),
+					'btn-danger': board[x][y].hasExlpoded(),
+					'btn-yellow-light': board[x][y].hasBomb() && !board[x][y].hasExlpoded() && !board[x][y].isHidden()
+				}">
 
-					<app-tile [tile]="tile"></app-tile>
+					<app-tile [tile]="tile" [gameState]="gameState"></app-tile>
 				
-				</button>			
+				</button>	
 	
 			</div>
 	

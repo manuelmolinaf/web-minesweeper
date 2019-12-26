@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Tile } from 'src/app/models/tile';
+import { GameState } from '../..//models/game-state'
 
 @Component({
   selector: 'app-tile',
@@ -9,10 +10,14 @@ import { Tile } from 'src/app/models/tile';
 export class TileComponent implements OnInit {
 
   @Input() tile: Tile;
+  @Input() gameState: GameState;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  public showFlag(): boolean {
+    return (this.tile.isFlagged() && (this.gameState === 0 || this.gameState === 2 ) || this.tile.hasBomb() && this.tile.isFlagged() && this.gameState === 1)
+  }
 }
