@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Tile } from '../../models/tile';
-import { GameState } from '../..//models/game-state'
+import { GameState } from '../../models/game-state';
 @Component({
 	selector: 'app-board',
 	templateUrl: './board.component.html',

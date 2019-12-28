@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Tile } from 'src/app/models/tile';
-import { GameState } from '../..//models/game-state'
+import { Tile } from '../../models/tile';
+import { GameState } from '../../models/game-state'
 
 @Component({
   selector: 'app-tile',
